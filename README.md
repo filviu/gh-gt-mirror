@@ -1,5 +1,7 @@
 # Mirror GitHub and Gists to Gitea
 
+Migrated from a Gist here for a better future :)
+
 A very crude update to:
 
 https://jpmens.net/2019/04/15/i-mirror-my-github-repositories-to-gitea/ and https://gist.github.com/jpmens/7690644643723577c8d1ee0450d0d82a
