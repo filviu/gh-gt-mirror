@@ -1,29 +1,86 @@
-# Mirror GitHub and Gists to Gitea
-
-Migrated from a Gist here for a better future :)
-
-A very crude update to:
-
-https://jpmens.net/2019/04/15/i-mirror-my-github-repositories-to-gitea/ and https://gist.github.com/jpmens/7690644643723577c8d1ee0450d0d82a
-
-Among the modifications is the ability to clone to different organizations.
+# Mirror GitHub Repositories and Gists to Gitea
 
 ## Usage
 
-Until I have time to actually make it use a config file you have to:
+### Docker
 
-1. Create a `~/.gitea-api` file with the Gitea API key.
-2. Create a `~/.github-token` file with the GitHub token.
-3. Edit organizations to your liking
-```
-github_target_org = "github"
-gist_target_org = "gist"
-starred_target_org = "starred"
-stargist_target_org = "starred-gists"
-```
-4. Edit `github_username` with your github username.
+Docker is the prefered way to run the service. Define a `docker-compose.yml` file and (optionally) an `.env` file. The preffered way is to keep at least the API TOKENS in the `.env` file. Shocking enough the folder example holds example files for compose and env.
 
-## Future
+`.env`
+
+```ini
+GITEA_API_URL=http://gitea.example.com:3000/api/v1
+GITEA_API_TOKEN=aabbccddeeffgghhiijj1234567890
+
+GITHUB_API_TOKEN=ghp_aabbccddeeffgghhiijj1234567890
+```
+
+`docker-compose.yml`
+```yaml
+version: '3'
+
+services:
+  ghmirror:
+    build:
+      context: ./
+    environment:
+      GITEA_API_URL: ${GITEA_API_URL}
+      GITEA_API_TOKEN: ${GITEA_API_TOKEN}
+      GITHUB_USERNAME: filviu
+      GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
+      GITHUB_ONLY_OWNER: "false"
+      GITHUB_MIRROR_FORKS: "false"
+      GITHUB_FILTER_ORGS: work-organization
+      GITHUB_TARGET_ORG: github
+      GITHUB_STARRED_ORG: github_starred
+      GIST_TARGET_ORG: gist
+      GISTSTAR_TARGET_ORG: gist_starred
+      CRON_SCHEDULE: 0 3 * * *
+    restart: always
+
+```
+
+Then simply run it.
+
+```bash
+docker-compose up -d
+```
+
+### Command line
+
+Install the **pygithub** dependency. One way would be:
+
+```bash
+python3 -m pip install pygithub
+```
+
+The following environment variables are expected:
+
+```bash
+GITEA_API_URL=http://gitea.example.com:3000/api/v1
+GITEA_API_TOKEN=aabbccddeeffgghhiijj1234567890
+
+GITHUB_USERNAME=github_username
+GITHUB_API_TOKEN=ghp_aabbccddeeffgghhiijj1234567890
+
+GITHUB_ONLY_OWNER=false
+GITHUB_MIRROR_FORKS=false
+GITHUB_FILTER_ORGS=work-organization
+
+# if any of these target organizations are not defined then
+# repositories in the category are not mirrored
+GITHUB_TARGET_ORG=github
+GIST_TARGET_ORG=github_starred
+GIST_TARGET_ORG=gist
+GISTSTAR_TARGET_ORG=gist_starred
+```
+
+Export them and then run the script `python github-mirror.py`. It works but it's not the intended use case.
+
+## Past & Future
+
+Started as a crude update to: https://jpmens.net/2019/04/15/i-mirror-my-github-repositories-to-gitea/ and https://gist.github.com/jpmens/7690644643723577c8d1ee0450d0d82a
+
+Among the modifications was the ability to mirror to different organizations depending on type. Eventually grew into it's own repository and now a docker image.
 
 I'm using this script daily and intend to eventually improve it. PRs welcome.
-
