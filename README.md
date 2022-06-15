@@ -21,8 +21,7 @@ version: '3'
 
 services:
   ghmirror:
-    build:
-      context: ./
+    image: filviu/gh-gt-mirror
     environment:
       GITEA_API_URL: ${GITEA_API_URL}
       GITEA_API_TOKEN: ${GITEA_API_TOKEN}
