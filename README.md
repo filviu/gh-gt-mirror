@@ -62,12 +62,16 @@ GITEA_API_TOKEN=aabbccddeeffgghhiijj1234567890
 GITHUB_USERNAME=github_username
 GITHUB_API_TOKEN=ghp_aabbccddeeffgghhiijj1234567890
 
+# only mirror repositories owned by the user
 GITHUB_ONLY_OWNER=false
+# mirror forks or not
 GITHUB_MIRROR_FORKS=false
+# skip mirroring repositories owned by this organization(s)
 GITHUB_FILTER_ORGS=work-organization
 
 # if any of these target organizations are not defined then
 # repositories in the category are not mirrored
+# These are gitea orgs, useful to organize your mirrors under
 GITHUB_TARGET_ORG=github
 GIST_TARGET_ORG=github_starred
 GIST_TARGET_ORG=gist
